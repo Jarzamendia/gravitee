@@ -1,12 +1,12 @@
 {
     "portal": {
       "navbar": {
-        "background-color": "#2d323e",
+        "background-color": "#072E11",
         "color": "#fff"
       },
       "footer": {
         "content": {
-          "background-color": "#2d323e",
+          "background-color": "#072E11",
           "color": "#e1e2e1"
         },
         "links": {
@@ -15,7 +15,7 @@
       },
       "home": {
         "header": {
-          "background-color": "#2d323e",
+          "background-color": "#072E11",
           "color": "#fff"
         },
         "topapis": {
