@@ -9,7 +9,7 @@ services:
       - 9200:9200
     volumes:
       - /api/elasticsearch/data:/usr/share/elasticsearch/data
-      - /api/elasticsearch/logs:/var/log/elasticsearch
+      - /api/elasticsearch/log:/var/log/elasticsearch
     environment:
       - http.host=0.0.0.0
       - transport.host=127.0.0.1
