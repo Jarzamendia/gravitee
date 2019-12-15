@@ -59,7 +59,8 @@ services:
 
   apim-managementui:
     hostname: managementui
-    image: graviteeio/management-ui:latest
+    #image: graviteeio/management-ui:latest
+    image: management-ui:latest
     environment:
       - MGMT_API_URL=http:\/\/api.local\/management\/
       - portalURL=http://portal.api.local/
