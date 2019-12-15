@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+
+  traefik:
+    image: traefik:v2.1
+    networks:
+      - api_net
+    command: --api.insecure=true --providers.docker --providers.docker.swarmMode=true --providers.docker.network=api_net --log
+    ports:
+      - 80:80
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    deploy:
+      mode: replicated
+      restart_policy:
+        condition: any
+
+networks:
+  api_net:
+    external: true

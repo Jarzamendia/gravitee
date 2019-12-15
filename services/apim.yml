@@ -1,0 +1,164 @@
+version: '3'
+
+services:
+
+  apim-elasticsearch:
+    hostname: elasticsearch
+    image: docker.elastic.co/elasticsearch/elasticsearch:5.4.3
+    ports:
+      - 9200:9200
+    volumes:
+      - /api/elasticsearch/data:/usr/share/elasticsearch/data
+      - /api/elasticsearch/logs:/var/log/elasticsearch
+    environment:
+      - http.host=0.0.0.0
+      - transport.host=127.0.0.1
+      - network.host=_eth0:ipv4_
+      - xpack.security.enabled=false
+      - xpack.monitoring.enabled=false
+      - cluster.name=elasticsearch
+      - bootstrap.memory_lock=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    networks:
+      - api_net
+
+  apim-mongodb:
+    hostname: mongodb
+    image: mongo:3.4
+    volumes:
+      - /api/mongo/data:/data/db
+      - /api/mongo/log:/var/log/mongodb
+    networks:
+      - api_net
+
+  apim-gateway:
+    hostname: gateway
+    image: graviteeio/gateway:latest
+    environment:
+      - gravitee_management_mongodb_uri=mongodb://apim-mongodb:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+      - gravitee_ratelimit_mongodb_uri=mongodb://apim-mongodb:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+      - gravitee_reporters_elasticsearch_endpoints_0=http://apim-elasticsearch:9200
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      update_config:
+        parallelism: 1
+        delay: 10s
+        order: start-first
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=api_net"
+        - "traefik.http.routers.apim-gateway_route.rule=Host(`gateway.api.local`)"
+        - "traefik.http.routers.apim-gateway_route.entrypoints=http"
+        - "traefik.http.routers.apim-gateway_route.service=apim-gateway_service"
+        - "traefik.http.services.apim-gateway_service.loadbalancer.server.port=8082"
+    networks:
+      - api_net
+
+  apim-managementui:
+    hostname: managementui
+    image: graviteeio/management-ui:latest
+    environment:
+      - MGMT_API_URL=http:\/\/api.local\/management\/
+      - portalURL=http://portal.api.local/
+      - email.enabled=true
+      - email.host=smtp2.ms.gov.br
+      - email.subject="[Gravitee.io] %s"
+      - email.port=587
+      - email.from=naoresponda@fazenda.ms.gov.br
+      - email.properties.auth=false
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=api_net"
+        - "traefik.http.routers.apim-managementui_route.rule=Host(`api.local`)"
+        - "traefik.http.routers.apim-managementui_route.entrypoints=http"
+        - "traefik.http.routers.apim-managementui_route.service=apim-managementui_service"
+        - "traefik.http.services.apim-managementui_service.loadbalancer.server.port=80"
+    networks:
+      - api_net
+
+  apim-managementapi:
+    hostname: managementapi
+    image: graviteeio/management-api:latest
+    environment:
+      - gravitee_management_mongodb_uri=mongodb://apim-mongodb:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+      - gravitee_analytics_elasticsearch_endpoints_0=http://apim-elasticsearch:9200
+      - portalURL=http://portal.api.local/
+      - email.enabled=true
+      - email.host=smtp2.ms.gov.br
+      - email.subject="[Gravitee.io] %s"
+      - email.port=587
+      - email.from=naoresponda@fazenda.ms.gov.br
+      - email.properties.auth=false
+      - email.properties.starttls.enable=false
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=api_net"
+        - "traefik.http.routers.apim-managementapi_route.rule=Host(`api.local`) && PathPrefix(`/management`)"
+        - "traefik.http.routers.apim-managementapi_route.entrypoints=http"
+        - "traefik.http.routers.apim-managementapi_route.service=apim-managementuiapi_service"
+        - "traefik.http.services.apim-managementuiapi_service.loadbalancer.server.port=8083"
+    networks:
+      - api_net
+
+  apim-portalui:
+    hostname: portalui
+    image: graviteeio/portal-ui:nightly
+    environment:
+      - PORTAL_API_URL=http:\/\/portal.api.local\/portal\/DEFAULT
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=api_net"
+        - "traefik.http.routers.apim-portalui_route.rule=Host(`portal.api.local`)"
+        - "traefik.http.routers.apim-portalui_route.entrypoints=http"
+        - "traefik.http.routers.apim-portalui_route.service=apim-portalui_service"
+        - "traefik.http.services.apim-portalui_service.loadbalancer.server.port=80"
+    networks:
+      - api_net
+
+  apim-portalapi:
+    hostname: portalapi
+    image: graviteeio/portal-api:nightly
+    environment:
+      - gravitee_management_mongodb_uri=mongodb://apim-mongodb:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+      - gravitee_analytics_elasticsearch_endpoints_0=http://apim-elasticsearch:9200
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=api_net"
+        - "traefik.http.routers.apim-portalapi_route.rule=Host(`portal.api.local`) && PathPrefix(`/portal`)"
+        - "traefik.http.routers.apim-portalapi_route.entrypoints=http"
+        - "traefik.http.routers.apim-portalapi_route.service=apim-portalapi_service"
+        - "traefik.http.services.apim-portalapi_service.loadbalancer.server.port=8084"
+    networks:
+      - api_net
+
+  apim-whoami:
+    image: containous/whoami
+    networks:
+      - api_net
+
+networks:
+  api_net:
+    external: true
