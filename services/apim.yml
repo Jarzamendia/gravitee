@@ -101,6 +101,8 @@ services:
         - "traefik.http.services.apim-gateway_service.loadbalancer.server.port=8082"
     networks:
       - api_net
+    volumes:
+      - /api/plugins/gravitee-resource-oauth2-provider-keycloak-1.6.0.zip:/opt/graviteeio-gateway/plugins/gravitee-resource-oauth2-provider-keycloak-1.6.0.zip
 
 # Management
 
