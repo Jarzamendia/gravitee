@@ -71,7 +71,7 @@ services:
       - email.properties.auth=false
     volumes:
       - /api/managementui/custom-theme.json:/var/www/html/themes/custom-theme.json
-      - /api/managementui/gravitee.css:gravitee.css
+      - /api/managementui/gravitee.css:/var/www/html/themes/assets/gravitee.css
       - /api/managementui/pt-BR.json:/var/www/html/portal/i18n/pt-BR.json
       - /api/managementui/MS_LOGO1-01.png:/var/www/html/themes/assets/MS_LOGO1-01.png
     deploy:
