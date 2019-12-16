@@ -183,8 +183,8 @@ services:
         - "traefik.http.services.apim-managementuiapi_service.loadbalancer.server.port=8083"
     networks:
       - api_net
-    volumes:
-      - /api/plugins/gravitee-resource-oauth2-provider-keycloak-1.6.0.zip:/opt/graviteeio-management-api/plugins/gravitee-resource-oauth2-provider-keycloak-1.6.0.zip
+    #volumes:
+    #  - /api/plugins/gravitee-resource-oauth2-provider-keycloak-1.6.0.zip:/opt/graviteeio-management-api/plugins/gravitee-resource-oauth2-provider-keycloak-1.6.0.zip
 
 # PORTAL
 
@@ -248,8 +248,8 @@ services:
         - "traefik.http.services.apim-portalapi_service.loadbalancer.server.port=8084"
     networks:
       - api_net
-    volumes:
-      - /api/plugins/gravitee-resource-oauth2-provider-keycloak-1.6.0.zip/opt/graviteeio-rest-api-portal-api/plugins/gravitee-resource-oauth2-provider-keycloak-1.6.0.zip
+    #volumes:
+    #  - /api/plugins/gravitee-resource-oauth2-provider-keycloak-1.6.0.zip/opt/graviteeio-rest-api-portal-api/plugins/gravitee-resource-oauth2-provider-keycloak-1.6.0.zip
 
 networks:
   api_net:
