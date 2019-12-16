@@ -59,8 +59,7 @@ services:
 
   apim-managementui:
     hostname: managementui
-    #image: graviteeio/management-ui:latest
-    image: management-ui:latest
+    image: graviteeio/management-ui:latest
     environment:
       - MGMT_API_URL=http:\/\/api.local\/management\/
       - portalURL=http://portal.api.local/
@@ -70,6 +69,11 @@ services:
       - email.port=587
       - email.from=naoresponda@fazenda.ms.gov.br
       - email.properties.auth=false
+    volumes:
+      - /api/managementui/custom-theme.json:/var/www/html/themes/custom-theme.json
+      - /api/managementui/gravitee.css:gravitee.css
+      - /api/managementui/pt-BR.json:/var/www/html/portal/i18n/pt-BR.json
+      - /api/managementui/MS_LOGO1-01.png:/var/www/html/themes/assets/MS_LOGO1-01.png
     deploy:
       mode: replicated
       replicas: 1

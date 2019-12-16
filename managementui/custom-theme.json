@@ -1,0 +1,37 @@
+{
+    "portal": {
+      "navbar": {
+        "background-color": "#072E11",
+        "color": "#fff"
+      },
+      "footer": {
+        "content": {
+          "background-color": "#072E11",
+          "color": "#e1e2e1"
+        },
+        "links": {
+          "color": "#f5f5f6"
+        }
+      },
+      "home": {
+        "header": {
+          "background-color": "#072E11",
+          "color": "#fff"
+        },
+        "topapis": {
+          "background-color": "#34a0d4"
+        }
+      },
+      "apisList": {
+        "background-color": "#f5f5f6"
+      },
+      "api": {
+        "header": {
+          "background-color": "#eff4f9"
+        },
+        "plans": {
+          "background-color": "#34a0d4"
+        }
+      }
+    }
+  }
