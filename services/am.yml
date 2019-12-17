@@ -1,0 +1,109 @@
+version: '3'
+
+services:
+
+  am_nginx:
+    image: nginx:1.16-alpine
+    container_name: gio_am_nginx
+    volumes:
+      - /api/nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          memory: 128M
+      placement:
+        constraints: [node.hostname == node1]
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=api_net"
+        - "traefik.http.routers.am_route.rule=Host(`am.api.local`)"
+        - "traefik.http.routers.am_route.entrypoints=http"
+        - "traefik.http.routers.am_route.service=apim-am_service"
+        - "traefik.http.services.am_service.loadbalancer.server.port=80"
+    networks:
+      - api_net
+
+  am_mongodb:
+    image: mongo:3.4
+    container_name: gio_am_mongodb
+    volumes:
+      - /api/ammongo/data:/data/db
+    networks:
+      - api_net
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          memory: 128M
+      placement:
+        constraints: [node.hostname == node1]
+
+  am_gateway:
+    image: graviteeio/am-gateway:2
+    container_name: gio_am_gateway
+    environment:
+      - gravitee_management_mongodb_uri=mongodb://am_mongodb:27017/graviteeam?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+      - gravitee_oauth2_mongodb_uri=mongodb://am_mongodb:27017/graviteeam?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+    networks:
+      - api_net
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          memory: 128M
+      placement:
+        constraints: [node.hostname == node1]
+
+  am_management:
+    image: graviteeio/am-management-api:2
+    container_name: gio_am_management
+    environment:
+      - gravitee_management_mongodb_uri=mongodb://am_mongodb:27017/graviteeam?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+      - gravitee_oauth2_mongodb_uri=mongodb://am_mongodb:27017/graviteeam?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
+    networks:
+      - api_net
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          memory: 128M
+      placement:
+        constraints: [node.hostname == node1]
+
+  am_webui:
+    image: graviteeio/am-management-ui:2
+    container_name: gio_am_webui
+    environment:
+      - MGMT_API_URL=http://am.api.local:80/am
+      - MGMT_UI_URL=http://am.api.local:80/am/ui
+    networks:
+      - api_net
+    deploy:
+      mode: replicated
+      replicas: 1
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          memory: 128M
+      placement:
+        constraints: [node.hostname == node1]
+
+networks:
+    api_net:
+        external: true

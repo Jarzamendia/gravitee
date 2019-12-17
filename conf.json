@@ -1,0 +1,17 @@
+{
+    "configuration" : {
+        "keycloakConfiguration":
+            "{
+                'realm': 'gravitee',
+                'auth-server-url': 'http://10.1.7.104:8081/auth',
+                'ssl-required': 'none',
+                'resource': 'echo',
+                'credentials': {
+                  'secret': '0515472d-2417-4d4f-be19-1202547d715f'
+                }
+              }"
+        },
+        "validateTokenLocally": true,
+        "verifyHost": false,
+        "trustAll": true
+}
