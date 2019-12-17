@@ -13,7 +13,7 @@ services:
         condition: any
       resources:
         limits:
-          memory: 128M
+          memory: 2048M
       placement:
         constraints: [node.hostname == node1]
       labels:
@@ -39,7 +39,7 @@ services:
         condition: any
       resources:
         limits:
-          memory: 128M
+          memory: 2048M
       placement:
         constraints: [node.hostname == node1]
 
@@ -57,7 +57,7 @@ services:
         condition: any
       resources:
         limits:
-          memory: 128M
+          memory: 2048M
       placement:
         constraints: [node.hostname == node1]
 
@@ -75,7 +75,7 @@ services:
         condition: any
       resources:
         limits:
-          memory: 128M
+          memory: 2048M
       placement:
         constraints: [node.hostname == node1]
 
@@ -93,7 +93,7 @@ services:
         condition: any
       resources:
         limits:
-          memory: 128M
+          memory: 2048M
       placement:
         constraints: [node.hostname == node1]
 
