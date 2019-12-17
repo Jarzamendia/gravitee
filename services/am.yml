@@ -21,7 +21,7 @@ services:
         - "traefik.docker.network=api_net"
         - "traefik.http.routers.am_route.rule=Host(`am.api.local`)"
         - "traefik.http.routers.am_route.entrypoints=http"
-        - "traefik.http.routers.am_route.service=apim-am_service"
+        - "traefik.http.routers.am_route.service=am_service"
         - "traefik.http.services.am_service.loadbalancer.server.port=80"
     networks:
       - api_net
