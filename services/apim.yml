@@ -240,7 +240,7 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=api_net"
-        - "traefik.http.routers.apim-portalapi_route.rule=Host(`portal.api.local`) && PathPrefix(`/portal`)"
+        - "traefik.http.routers.apim-portalapi_route.rule=Host(`portaldeapi.sgi.ms.gov.br`) && PathPrefix(`/portal`)"
         - "traefik.http.routers.apim-portalapi_route.entrypoints=http"
         - "traefik.http.routers.apim-portalapi_route.service=apim-portalapi_service"
         - "traefik.http.services.apim-portalapi_service.loadbalancer.server.port=8084"
