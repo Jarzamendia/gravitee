@@ -56,7 +56,6 @@ services:
         limits:
           memory: 700M
       placement:
-        #constraints: [node.labels.region == prd]
         constraints: [node.hostname == node1]
     environment:
       - sid=D0XXX
@@ -90,12 +89,11 @@ services:
         delay: 10s
         order: start-first
       placement:
-        #constraints: [node.labels.region == prd]
         constraints: [node.hostname == node1]
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=api_net"
-        - "traefik.http.routers.apim-gateway_route.rule=Host(`gateway.api.local`)"
+        - "traefik.http.routers.apim-gateway_route.rule=Host(`gateway.sgi.ms.gov.br`)"
         - "traefik.http.routers.apim-gateway_route.entrypoints=http"
         - "traefik.http.routers.apim-gateway_route.service=apim-gateway_service"
         - "traefik.http.services.apim-gateway_service.loadbalancer.server.port=8082"
@@ -114,8 +112,8 @@ services:
       - app_name=gravitee
       - app_version=1.30.0
       - team=DEVOPS
-      - MGMT_API_URL=http:\/\/api.local\/management\/
-      - portalURL=http://portal.api.local/
+      - MGMT_API_URL=http:\/\/portaldodesenvolvedor.sgi.ms.gov.br\/management\/
+      - portalURL=http://portaldeapi.sgi.ms.gov.br/
       - email.enabled=true
       - email.host=smtp2.ms.gov.br
       - email.subject="[Gravitee.io] %s"
@@ -140,7 +138,7 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=api_net"
-        - "traefik.http.routers.apim-managementui_route.rule=Host(`api.local`)"
+        - "traefik.http.routers.apim-managementui_route.rule=Host(`portaldodesenvolvedor.sgi.ms.gov.br`)"
         - "traefik.http.routers.apim-managementui_route.entrypoints=http"
         - "traefik.http.routers.apim-managementui_route.service=apim-managementui_service"
         - "traefik.http.services.apim-managementui_service.loadbalancer.server.port=80"
@@ -157,7 +155,7 @@ services:
       - team=DEVOPS
       - gravitee_management_mongodb_uri=mongodb://apim-mongodb:27017/gravitee?serverSelectionTimeoutMS=5000&connectTimeoutMS=5000&socketTimeoutMS=5000
       - gravitee_analytics_elasticsearch_endpoints_0=http://apim-elasticsearch:9200
-      - portalURL=http://portal.api.local/
+      - portalURL=http://portaldeapi.sgi.ms.gov.br/
       - email.enabled=true
       - email.host=smtp2.ms.gov.br
       - email.subject="[Gravitee.io] %s"
@@ -198,7 +196,7 @@ services:
       - app_name=gravitee
       - app_version=1.30.0
       - team=DEVOPS
-      - PORTAL_API_URL=http:\/\/portal.api.local\/portal\/DEFAULT
+      - PORTAL_API_URL=http:\/\/portaldeapi.sgi.ms.gov.br\/portal\/DEFAULT
     deploy:
       mode: replicated
       replicas: 1
@@ -208,12 +206,11 @@ services:
         limits:
           memory: 128M
       placement:
-        #constraints: [node.labels.region == prd]
         constraints: [node.hostname == node1]
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=api_net"
-        - "traefik.http.routers.apim-portalui_route.rule=Host(`portal.api.local`)"
+        - "traefik.http.routers.apim-portalui_route.rule=Host(`portaldeapi.sgi.ms.gov.br`)"
         - "traefik.http.routers.apim-portalui_route.entrypoints=http"
         - "traefik.http.routers.apim-portalui_route.service=apim-portalui_service"
         - "traefik.http.services.apim-portalui_service.loadbalancer.server.port=80"
@@ -239,7 +236,6 @@ services:
         limits:
           memory: 2048M
       placement:
-        #constraints: [node.labels.region == prd]
         constraints: [node.hostname == node1]
       labels:
         - "traefik.enable=true"
