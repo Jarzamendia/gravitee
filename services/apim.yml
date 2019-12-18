@@ -177,7 +177,7 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=api_net"
-        - "traefik.http.routers.apim-managementapi_route.rule=Host(`api.local`) && PathPrefix(`/management`)"
+        - "traefik.http.routers.apim-managementapi_route.rule=Host(`portaldodesenvolvedor.sgi.ms.gov.br`) && PathPrefix(`/management`)"
         - "traefik.http.routers.apim-managementapi_route.entrypoints=http"
         - "traefik.http.routers.apim-managementapi_route.service=apim-managementuiapi_service"
         - "traefik.http.services.apim-managementuiapi_service.loadbalancer.server.port=8083"
